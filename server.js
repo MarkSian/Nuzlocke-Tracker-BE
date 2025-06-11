@@ -4,6 +4,9 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 
 // Import routes and middleware
+import authRoutes from './routes/authRoutes.js';
+import nuzlockeRoutes from './routes/nuzlockeRoutes.js';
+import { authenticateToken } from './middleware/authMiddleware.js';
 
 
 
@@ -22,12 +25,12 @@ app.use(express.json());
 
 // Routes
 // Authentication routes (e.g., /api/auth/register, /api/auth/login)
-// app.use('/api/auth', authRoutes);
+app.use('/api/auth', authRoutes);
 
 // // Nuzlocke-specific routes (e.g., /api/nuzlocke/runs)
 // // These routes are protected by the authenticateToken middleware,
 // // ensuring that only authenticated users can access them.
-// app.use('/api/nuzlocke', authenticateToken, nuzlockeRoutes);
+app.use('/api/nuzlocke', authenticateToken, nuzlockeRoutes);
 
 
 
@@ -36,6 +39,7 @@ app.use(express.json());
 mongoose.connect(process.env.MONGO_URI)
     .then(() => {
         // If MongoDB connection is successful, start the Express server
+        console.log('Connected to MongoDB!');
         app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
     })
     .catch(err => {

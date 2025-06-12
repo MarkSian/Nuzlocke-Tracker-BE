@@ -23,7 +23,7 @@ const nuzlockeRunSchema = new mongoose.Schema({
         required: true
     },
     gameVersion: String, // The Pokémon game version (e.g., "Emerald", "Ruby", "Sapphire").
-    starterPokemon: Object,
+    runName: String,
     currentRoute: String, // The last known route the user is tracking.
     encounters: [encounterSchema], // An array of all recorded Pokémon encounters for this run.
     boxPokemon: [encounterSchema], // Pokémon currently alive and in the PC box.
@@ -32,6 +32,49 @@ const nuzlockeRunSchema = new mongoose.Schema({
     rivalsDefeated: [String], // An array of names of defeated rivals.
     bossesDefeated: [String], // An array of names of other major boss trainers defeated.
 }, { timestamps: true }); // Automatically adds 'createdAt' and 'updatedAt' fields.
+
+// Example of how a NuzlockeRun document:
+// {
+//   "gameVersion": "Emerald",
+//   "runName": "Hoenn Adventure",
+//   "currentRoute": "Route 110",
+//   "encounters": [
+//     {
+//       "routeName": "Route 101",
+//       "pokemonId": 261,
+//       "pokemonName": "Poochyena",
+//       "nickname": "Shadow",
+//       "status": "Captured",
+//       "nature": "Adamant",
+//       "image": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/261.png"
+//     }
+//   ],
+//   "boxPokemon": [
+//     {
+//       "routeName": "Route 102",
+//       "pokemonId": 263,
+//       "pokemonName": "Zigzagoon",
+//       "nickname": "Zippy",
+//       "status": "Captured",
+//       "nature": "Jolly",
+//       "image": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/263.png"
+//     }
+//   ],
+//   "gravePokemon": [
+//     {
+//       "routeName": "Route 104",
+//       "pokemonId": 265,
+//       "pokemonName": "Wurmple",
+//       "nickname": "Silky",
+//       "status": "Fainted",
+//       "nature": "Calm",
+//       "image": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/265.png"
+//     }
+//   ],
+//   "badges": ["Stone Badge", "Knuckle Badge"],
+//   "rivalsDefeated": ["May", "Brendan"],
+//   "bossesDefeated": ["Roxanne", "Brawly"]
+// }
 
 // Export the NuzlockeRun model
 export default mongoose.model('NuzlockeRun', nuzlockeRunSchema);

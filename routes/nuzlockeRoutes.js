@@ -87,12 +87,12 @@ router.put('/runs/:id', async (req, res) => {
         // Instead of Object.assign(run, req.body), explicitly define what fields can be updated.
         // This prevents malicious users from trying to modify sensitive fields like 'userId' or 'createdAt'.
         const {
-            gameVersion, starterPokemon, currentRoute, encounters,
+            gameVersion, runName, currentRoute, encounters,
             boxPokemon, gravePokemon, badges, rivalsDefeated, bossesDefeated
         } = req.body;
 
         if (gameVersion !== undefined) run.gameVersion = gameVersion;
-        if (starterPokemon !== undefined) run.starterPokemon = starterPokemon;
+        if (runName !== undefined) run.runName = runName;
         if (currentRoute !== undefined) run.currentRoute = currentRoute;
         if (encounters !== undefined) run.encounters = encounters;
         if (boxPokemon !== undefined) run.boxPokemon = boxPokemon;

@@ -6,6 +6,7 @@ const encounterSchema = new mongoose.Schema({
     pokemonId: Number, // The official PokeAPI ID for the Pokémon species (e.g., 25 for Pikachu).
     pokemonName: String, // The pokemon's name.
     nickname: String, // The user-given nickname for this specific Pokémon.
+    level: Number,
     status: { // The current state of the Pokémon in the Nuzlocke.
         type: String,
         enum: ['Captured', 'Fainted', 'Skipped', 'Upcoming'], // Defined allowed values.

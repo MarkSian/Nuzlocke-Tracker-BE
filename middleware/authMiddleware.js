@@ -9,10 +9,9 @@ import jwt from 'jsonwebtoken';
  * @param {function} next - Callback function to pass control to the next middleware
  */
 export const authenticateToken = (req, res, next) => {
-    // Get the Authorization header (e.g., "Bearer YOUR_TOKEN")
-    const authHeader = req.headers['authorization'];
-    // Extract the token (the part after "Bearer ")
-    const token = authHeader && authHeader.split(' ')[1];
+    // Extract the JWT token from the cookies
+    const token = req.cookies.token;
+
 
     // If no token is provided, send 401 (Unauthorized)
     if (!token) {
@@ -23,8 +22,7 @@ export const authenticateToken = (req, res, next) => {
     jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
         // If token verification fails (e.g., invalid, expired, tampered), send 403 (Forbidden)
         if (err) {
-            // You could add more specific error logging here if needed
-            // console.error('JWT verification error:', err);
+
             return res.sendStatus(403);
         }
         // If token is valid, attach the userId from the token payload to the request object

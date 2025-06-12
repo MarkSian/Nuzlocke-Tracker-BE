@@ -1,7 +1,7 @@
 import express from 'express';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
-import User from '../models/User.js'; // Import the User model
+import User from '../models/User.js';
 
 const router = express.Router();
 
@@ -12,7 +12,7 @@ const router = express.Router();
  */
 router.post('/register', async (req, res) => {
     try {
-        const { username, password, email } = req.body;
+        const { username, password } = req.body;
 
         // Basic validation: Check if username and password are provided
         if (!username || !password) {
@@ -22,19 +22,11 @@ router.post('/register', async (req, res) => {
         // Check if user already exists
         const existingUser = await User.findOne({ username });
         if (existingUser) {
-            return res.status(400).json({ error: 'Username already taken.' });
+            return res.status(409).json({ error: 'Username already taken.' });
         }
-        // If email is unique and not sparse, you might check for existing email too
-        if (email) {
-            const existingEmail = await User.findOne({ email });
-            if (existingEmail) {
-                return res.status(400).json({ error: 'Email already registered.' });
-            }
-        }
-
 
         // Create a new user instance and save it
-        const newUser = new User({ username, password, email }); // Password will be hashed by pre-save hook
+        const newUser = new User({ username, password }); // Password will be hashed by pre-save hook
         await newUser.save();
 
         res.status(201).json({ message: 'User registered successfully!' });
@@ -46,7 +38,7 @@ router.post('/register', async (req, res) => {
 
 /**
  * @route POST /api/auth/login
- * @desc Authenticate user and get JWT token
+ * @desc Authenticate user and get JWT token in HTTP-only cookie
  * @access Public
  */
 router.post('/login', async (req, res) => {
@@ -75,23 +67,40 @@ router.post('/login', async (req, res) => {
 
         // Generate JWT token
         const token = jwt.sign(
-            { userId: user._id }, // Payload: user ID
-            process.env.JWT_SECRET, // Secret key from environment variables
-            { expiresIn: '2h' } // Token expires in 2 hours
+            { userId: user._id },
+            process.env.JWT_SECRET,
+            { expiresIn: '2h' }
         );
 
-        // Send token and basic user info back to the client
+        // Set token as an HTTP-only cookie
+        res.cookie('token', token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'Strict',
+            maxAge: 2 * 60 * 60 * 1000
+        });
+
+        // Send user info back to the client (token not required in body)
         res.json({
-            token,
             user: {
                 username: user.username,
                 id: user._id
             }
         });
     } catch (err) {
-        console.error('Login error:', err); // Log the error
+        console.error('Login error:', err);
         res.status(500).json({ error: 'Server error during login.', details: err.message });
     }
+});
+
+/**
+ * @route POST /api/auth/logout
+ * @desc Clear JWT cookie
+ * @access Public
+ */
+router.post('/logout', (req, res) => {
+    res.clearCookie('token');
+    res.json({ message: 'Logged out' });
 });
 
 export default router;

@@ -2,6 +2,7 @@ import express from 'express';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import cors from 'cors';
+import cookieParser from 'cookie-parser';
 
 // Import routes and middleware
 import authRoutes from './routes/authRoutes.js';
@@ -22,6 +23,9 @@ app.use(cors({ origin: process.env.CLIENT_URL, credentials: true }));
 
 // Parse JSON request bodies (for POST and PUT requests).
 app.use(express.json());
+
+// Parse HTTP-only cookies for securer token storage
+app.use(cookieParser());
 
 // Routes
 // Authentication routes (e.g., /api/auth/register, /api/auth/login)

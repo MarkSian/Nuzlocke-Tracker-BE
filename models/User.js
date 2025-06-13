@@ -15,10 +15,10 @@ const userSchema = new mongoose.Schema({
     },
     // Array of ObjectIds referencing NuzlockeRun documents owned by this user.
     // This allows you to easily find all runs associated with a user.
-    nuzlockeRuns: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'NuzlockeRun'
-    }],
+    // nuzlockeRuns: [{
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     ref: 'NuzlockeRun'
+    // }],
 }, { timestamps: true }); // Mongoose automatically adds 'createdAt' and 'updatedAt' fields
 
 // This middleware runs before a user document is saved to the database.

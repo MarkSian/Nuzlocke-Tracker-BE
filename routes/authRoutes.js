@@ -1,7 +1,7 @@
 import express from 'express';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
-import User from '../models/user-temp.js'; // capitalize 'User' to match the model export
+import User from '../models/User.js'; // capitalize 'User' to match the model export
 
 const router = express.Router();
 

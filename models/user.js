@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import bcrypt from 'bcrypt'; // Used for hashing
-
+// be sure to be case sensitive with the import path
 
 // User Schema
 const userSchema = new mongoose.Schema({

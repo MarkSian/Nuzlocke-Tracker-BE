@@ -19,35 +19,6 @@ router.get('/runs', async (req, res) => {
     }
 });
 
-/**
- * @route GET /api/nuzlocke/runs/:id
- * @desc Get a specific Nuzlocke run by ID
- * @access Private (requires JWT)
- */
-router.get('/runs/:id', async (req, res) => {
-    try {
-        const run = await NuzlockeRun.findById(req.params.id);
-
-        // If run not found
-        if (!run) {
-            return res.status(404).json({ error: 'Nuzlocke run not found.' });
-        }
-
-        // Ensure the retrieved run belongs to the authenticated user
-        if (run.userId.toString() !== req.userId) {
-            return res.sendStatus(403); // Forbidden: user does not own this run
-        }
-
-        res.json(run);
-    } catch (err) {
-        console.error('Error fetching single run:', err);
-        // Check if the ID format is invalid (e.g., not a valid ObjectId)
-        if (err.name === 'CastError') {
-            return res.status(400).json({ error: 'Invalid run ID format.' });
-        }
-        res.status(500).json({ error: 'Server error while fetching Nuzlocke run.', details: err.message });
-    }
-});
 
 /**
  * @route POST /api/nuzlocke/runs
